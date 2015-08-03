@@ -6,7 +6,8 @@
     "id": "cc.fovea.cordova.purchase",
     "platforms": [
       "android",
-      "ios"
+      "ios",
+      "windows"
     ]
   },
   "repository": {
