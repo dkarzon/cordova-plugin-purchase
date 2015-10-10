@@ -738,7 +738,7 @@ store.verbosity = 0;
         this.options = {};
     };
     InAppBilling.prototype.init = function(success, fail, options, skus) {
-        store.pluginInit(success, errorCb(fail), options, skus);
+        store.pluginInit(success, errorCb(fail), options, skus, log);
     };
     InAppBilling.prototype.getPurchases = function(success, fail) {
         if (this.options.showLog) {
@@ -987,7 +987,7 @@ store.verbosity = 0;
             store.ready(true);
         }, function() {});
     };
-    store.pluginInit = function(success, fail, options, skus) {
+    store.pluginInit = function(success, fail, options, skus, log) {
         if (!options) options = {};
         this.options = {
             showLog: options.showLog !== false

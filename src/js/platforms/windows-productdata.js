@@ -118,7 +118,7 @@
         }, function() {});
     };
     
-    store.pluginInit = function (success, fail, options, skus) {
+    store.pluginInit = function (success, fail, options, skus, log) {
         if (!options)
             options = {};
     

@@ -17,7 +17,7 @@ var InAppBilling = function () {
 
 InAppBilling.prototype.init = function (success, fail, options, skus) {
     //TODO - Fix android plugin to handle options instead of sku array
-	store.pluginInit(success, errorCb(fail), options, skus);
+	store.pluginInit(success, errorCb(fail), options, skus, log);
 };
 InAppBilling.prototype.getPurchases = function (success, fail) {
 	if (this.options.showLog) {
