@@ -16,46 +16,8 @@ var InAppBilling = function () {
 };
 
 InAppBilling.prototype.init = function (success, fail, options, skus) {
-	if (!options)
-        options = {};
-
-	this.options = {
-		showLog: options.showLog !== false
-	};
-
-	if (this.options.showLog) {
-		log('setup ok');
-	}
-
-	var hasSKUs = false;
-	//Optional Load SKUs to Inventory.
-	if(typeof skus !== "undefined"){
-		if (typeof skus === "string") {
-			skus = [skus];
-		}
-		if (skus.length > 0) {
-			if (typeof skus[0] !== 'string') {
-				var msg = 'invalid productIds: ' + JSON.stringify(skus);
-				if (this.options.showLog) {
-					log(msg);
-				}
-				fail(msg, store.ERR_INVALID_PRODUCT_ID);
-				return;
-			}
-			if (this.options.showLog) {
-				log('load ' + JSON.stringify(skus));
-			}
-			hasSKUs = true;
-		}
-	}
-
-	if (hasSKUs) {
-		cordova.exec(success, errorCb(fail), "InAppBillingPlugin", "init", [skus]);
-    }
-	else {
-        //No SKUs
-		cordova.exec(success, errorCb(fail), "InAppBillingPlugin", "init", []);
-    }
+    //TODO - Fix android plugin to handle options instead of sku array
+	store.pluginInit(success, errorCb(fail), options, skus);
 };
 InAppBilling.prototype.getPurchases = function (success, fail) {
 	if (this.options.showLog) {
@@ -110,12 +72,6 @@ InAppBilling.prototype.getProductDetails = function (success, fail, skus) {
         }
 		cordova.exec(success, errorCb(fail), "InAppBillingPlugin", "getProductDetails", [skus]);
     }
-};
-InAppBilling.prototype.setTestMode = function (success, fail) {
-	if (this.options.showLog) {
-		log('setTestMode called!');
-	}
-	return cordova.exec(success, errorCb(fail), "InAppBillingPlugin", "setTestMode", [""]);
 };
 
 // Generates a `fail` function that accepts an optional error code

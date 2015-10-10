@@ -83,5 +83,48 @@
             }
         );
     };
+    
+    store.pluginInit = function (success, fail, options, skus) {
+        if (!options)
+            options = {};
+    
+        this.options = {
+            showLog: options.showLog !== false
+        };
+    
+        if (this.options.showLog) {
+            log('setup ok');
+        }
+    
+        var hasSKUs = false;
+        //Optional Load SKUs to Inventory.
+        if(typeof skus !== "undefined"){
+            if (typeof skus === "string") {
+                skus = [skus];
+            }
+            if (skus.length > 0) {
+                if (typeof skus[0] !== 'string') {
+                    var msg = 'invalid productIds: ' + JSON.stringify(skus);
+                    if (this.options.showLog) {
+                        log(msg);
+                    }
+                    fail(msg, store.ERR_INVALID_PRODUCT_ID);
+                    return;
+                }
+                if (this.options.showLog) {
+                    log('load ' + JSON.stringify(skus));
+                }
+                hasSKUs = true;
+            }
+        }
+    
+        if (hasSKUs) {
+            cordova.exec(success, fail, "InAppBillingPlugin", "init", [skus]);
+        }
+        else {
+            //No SKUs
+            cordova.exec(success, fail, "InAppBillingPlugin", "init", []);
+        }
+    };
 
 })();

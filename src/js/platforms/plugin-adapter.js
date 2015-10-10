@@ -4,6 +4,8 @@
 var initialized = false;
 var skus = [];
 
+store.sandbox = false;
+
 store.when("refreshed", function() {
     if (!initialized) init();
 });
@@ -46,7 +48,8 @@ function init() {
             });
         },
         {
-            showLog: store.verbosity >= store.DEBUG ? true : false
+            showLog: store.verbosity >= store.DEBUG ? true : false,
+            sandbox: store.sandbox
         },
         skus);
 }

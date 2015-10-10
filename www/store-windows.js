@@ -738,38 +738,7 @@ store.verbosity = 0;
         this.options = {};
     };
     InAppBilling.prototype.init = function(success, fail, options, skus) {
-        if (!options) options = {};
-        this.options = {
-            showLog: options.showLog !== false
-        };
-        if (this.options.showLog) {
-            log("setup ok");
-        }
-        var hasSKUs = false;
-        if (typeof skus !== "undefined") {
-            if (typeof skus === "string") {
-                skus = [ skus ];
-            }
-            if (skus.length > 0) {
-                if (typeof skus[0] !== "string") {
-                    var msg = "invalid productIds: " + JSON.stringify(skus);
-                    if (this.options.showLog) {
-                        log(msg);
-                    }
-                    fail(msg, store.ERR_INVALID_PRODUCT_ID);
-                    return;
-                }
-                if (this.options.showLog) {
-                    log("load " + JSON.stringify(skus));
-                }
-                hasSKUs = true;
-            }
-        }
-        if (hasSKUs) {
-            cordova.exec(success, errorCb(fail), "InAppBillingPlugin", "init", [ skus ]);
-        } else {
-            cordova.exec(success, errorCb(fail), "InAppBillingPlugin", "init", []);
-        }
+        store.pluginInit(success, errorCb(fail), options, skus);
     };
     InAppBilling.prototype.getPurchases = function(success, fail) {
         if (this.options.showLog) {
@@ -823,12 +792,6 @@ store.verbosity = 0;
             cordova.exec(success, errorCb(fail), "InAppBillingPlugin", "getProductDetails", [ skus ]);
         }
     };
-    InAppBilling.prototype.setTestMode = function(success, fail) {
-        if (this.options.showLog) {
-            log("setTestMode called!");
-        }
-        return cordova.exec(success, errorCb(fail), "InAppBillingPlugin", "setTestMode", [ "" ]);
-    };
     function errorCb(fail) {
         return function(error) {
             if (!fail) return;
@@ -852,6 +815,7 @@ store.verbosity = 0;
     "use strict";
     var initialized = false;
     var skus = [];
+    store.sandbox = false;
     store.when("refreshed", function() {
         if (!initialized) init();
     });
@@ -880,7 +844,8 @@ store.verbosity = 0;
                 message: "Init failed - " + err
             });
         }, {
-            showLog: store.verbosity >= store.DEBUG ? true : false
+            showLog: store.verbosity >= store.DEBUG ? true : false,
+            sandbox: store.sandbox
         }, skus);
     }
     function iabReady() {
@@ -1044,6 +1009,16 @@ store.verbosity = 0;
             }
             store.ready(true);
         }, function() {});
+    };
+    store.pluginInit = function(success, fail, options, skus) {
+        if (!options) options = {};
+        this.options = {
+            showLog: options.showLog !== false
+        };
+        if (this.options.showLog) {
+            log("setup ok");
+        }
+        cordova.exec(success, fail, "InAppBillingPlugin", "init", options);
     };
 })();
 

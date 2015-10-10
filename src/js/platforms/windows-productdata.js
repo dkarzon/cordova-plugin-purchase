@@ -117,5 +117,20 @@
             store.ready(true);
         }, function() {});
     };
+    
+    store.pluginInit = function (success, fail, options, skus) {
+        if (!options)
+            options = {};
+    
+        this.options = {
+            showLog: options.showLog !== false
+        };
+    
+        if (this.options.showLog) {
+            log('setup ok');
+        }
+    
+        cordova.exec(success, fail, "InAppBillingPlugin", "init", options);
+    };
 
 })();
